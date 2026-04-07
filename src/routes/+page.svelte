@@ -5,6 +5,7 @@
   import AccountSidebar from "$lib/components/AccountSidebar.svelte";
   import ProjectionSection from "$lib/components/ProjectionSection.svelte";
   import GeldflussSection from "$lib/components/GeldflussSection.svelte";
+  import MarktdatenCard from "$lib/components/MarktdatenCard.svelte";
 
   function exportData() {
     const json = JSON.stringify(appStore.getState(), null, 2);
@@ -49,7 +50,11 @@
   <div class="flex-1 overflow-y-auto">
     <div class="mx-auto space-y-10 p-6">
       <ProjectionSection />
-      <GeldflussSection />
+
+      <div class="flex flex-wrap items-start gap-10">
+        <GeldflussSection />
+        <MarktdatenCard />
+      </div>
 
       <section>
         <h2 class="mb-4 text-base font-semibold">Daten</h2>

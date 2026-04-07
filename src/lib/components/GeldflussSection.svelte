@@ -4,6 +4,7 @@
   import * as Card from "$lib/components/ui/card";
   import { Input } from "$lib/components/ui/input";
   import Tip from "$lib/components/Tip.svelte";
+  import { Pencil } from "@lucide/svelte";
 
   let data = $derived($appStore);
 
@@ -98,10 +99,12 @@
               />
             {:else}
               <button
-                class="font-semibold transition-colors hover:text-muted-foreground"
+                class="cursor-pointer group flex items-center gap-1.5 font-semibold transition-colors hover:text-blue-400"
                 onclick={() => startFlowEdit("__income__", income)}
+                title="Klicken zum Bearbeiten"
               >
-                {formatEur(income)}
+                <span class="border-b border-dashed border-current/40">{formatEur(income)}</span>
+                <Pencil size={11} class="opacity-0 transition-opacity group-hover:opacity-60" />
               </button>
             {/if}
             <span class="w-12 text-right text-xs text-muted-foreground">100 %</span>
@@ -131,10 +134,12 @@
               />
             {:else}
               <button
-                class="font-semibold transition-colors hover:text-muted-foreground"
+                class="cursor-pointer group flex items-center gap-1.5 font-semibold transition-colors hover:text-red-400"
                 onclick={() => startFlowEdit("__fixed__", fixed)}
+                title="Klicken zum Bearbeiten"
               >
-                {formatEur(fixed)}
+                <span class="border-b border-dashed border-current/40">{formatEur(fixed)}</span>
+                <Pencil size={11} class="opacity-0 transition-opacity group-hover:opacity-60" />
               </button>
             {/if}
             <span class="w-12 text-right text-xs text-muted-foreground">{pct(fixed)}</span>
@@ -186,15 +191,19 @@
                 {:else}
                   <div class="text-right">
                     <button
-                      class="font-semibold transition-colors hover:text-muted-foreground"
+                      class="group flex items-center gap-1.5 font-semibold transition-colors hover:text-orange-400"
                       onclick={() => startFlowEdit(acc.id, acc.monthlyContribution)}
+                      title="Klicken zum Bearbeiten"
                     >
-                      {#if netCost !== null}
-                        {formatEur(netCost)}
-                        <span class="ml-1 text-xs font-normal text-muted-foreground/60">({formatEur(acc.monthlyContribution)})</span>
-                      {:else}
-                        {formatEur(acc.monthlyContribution)}
-                      {/if}
+                      <span class="border-b border-dashed border-current/40">
+                        {#if netCost !== null}
+                          {formatEur(netCost)}
+                          <span class="ml-1 text-xs font-normal text-muted-foreground/60">({formatEur(acc.monthlyContribution)})</span>
+                        {:else}
+                          {formatEur(acc.monthlyContribution)}
+                        {/if}
+                      </span>
+                      <Pencil size={11} class="opacity-0 transition-opacity group-hover:opacity-60" />
                     </button>
                     {#if netCost !== null}
                       <p class="text-[10px] text-muted-foreground">netto (brutto)</p>
@@ -231,10 +240,12 @@
                 />
               {:else}
                 <button
-                  class="font-semibold transition-colors hover:text-muted-foreground"
+                  class="group flex items-center gap-1.5 font-semibold transition-colors hover:text-foreground"
                   onclick={() => startFlowEdit(acc.id, acc.monthlyContribution)}
+                  title="Klicken zum Bearbeiten"
                 >
-                  {formatEur(acc.monthlyContribution)}
+                  <span class="border-b border-dashed border-current/40">{formatEur(acc.monthlyContribution)}</span>
+                  <Pencil size={11} class="opacity-0 transition-opacity group-hover:opacity-60" />
                 </button>
               {/if}
               <span class="w-12 text-right text-xs text-muted-foreground">

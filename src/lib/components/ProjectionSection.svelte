@@ -1,5 +1,6 @@
 <script lang="ts">
   import { appStore } from "$lib/stores/app";
+  import { projectionUI } from "$lib/stores/projectionUI.svelte";
   import {
     projectAllAccounts,
     projectBalance,
@@ -25,23 +26,24 @@
 
   // Sliders — initialized once from persisted plan, then written back on change
   let localHorizon = $state(20);
-  let localInflation = $state(0.02);
   let showInflationAdjusted = $state(false);
   let slidersInit = $state(false);
 
   $effect(() => {
     if (!slidersInit && data.plan.timeHorizonYears > 0) {
       localHorizon = data.plan.timeHorizonYears;
-      localInflation = data.plan.inflationRate;
+      projectionUI.inflationRate = data.plan.inflationRate;
       slidersInit = true;
     }
   });
 
+  // Write slider values back to the store (one direction only — no sync effect needed).
+  // MarktdatenCard writes directly to projectionUI.inflationRate, bypassing the store.
   $effect(() => {
     if (slidersInit) {
       appStore.updatePlan({
         timeHorizonYears: localHorizon,
-        inflationRate: localInflation,
+        inflationRate: projectionUI.inflationRate,
       });
     }
   });
@@ -64,12 +66,12 @@
 
   let displayFlexible = $derived(
     showInflationAdjusted
-      ? adjustForInflation(totalFlexible, localInflation)
+      ? adjustForInflation(totalFlexible, projectionUI.inflationRate)
       : totalFlexible,
   );
   let displayAll = $derived(
     showInflationAdjusted
-      ? adjustForInflation(totalAll, localInflation)
+      ? adjustForInflation(totalAll, projectionUI.inflationRate)
       : totalAll,
   );
 
@@ -85,7 +87,7 @@
       true,
     );
     return showInflationAdjusted
-      ? adjustForInflation(nominal, localInflation)
+      ? adjustForInflation(nominal, projectionUI.inflationRate)
       : nominal;
   });
   let mattressFinal = $derived(
@@ -144,7 +146,7 @@
   let whatIfDisplayFlexible = $derived.by(() => {
     if (!hasWhatIf) return [] as number[];
     return showInflationAdjusted
-      ? adjustForInflation(whatIfTotalFlexible, localInflation)
+      ? adjustForInflation(whatIfTotalFlexible, projectionUI.inflationRate)
       : whatIfTotalFlexible;
   });
 
@@ -166,7 +168,7 @@
     const months = localHorizon * 12;
     const nominal = projectBalance(0, monthlyRefund, refundReturnRate, months);
     return showInflationAdjusted
-      ? adjustForInflation(nominal, localInflation)
+      ? adjustForInflation(nominal, projectionUI.inflationRate)
       : nominal;
   });
 
@@ -187,7 +189,7 @@
     if (!hasWhatIf) return [] as number[];
     const whatIfAll = totalWealthByMonth(whatIfProjections, whatIfAccounts, false);
     const base = showInflationAdjusted
-      ? adjustForInflation(whatIfAll, localInflation)
+      ? adjustForInflation(whatIfAll, projectionUI.inflationRate)
       : whatIfAll;
     if (taxBonusLine.length === 0) return base;
     return base.map((v, i) => v + (taxBonusLine[i] ?? 0));
@@ -220,7 +222,7 @@
       const vals = projections[acc.id];
       if (!vals) continue;
       const display = showInflationAdjusted
-        ? adjustForInflation(vals, localInflation)
+        ? adjustForInflation(vals, projectionUI.inflationRate)
         : vals;
       datasets.push({
         label: acc.name,
@@ -238,7 +240,7 @@
         const vals = whatIfProjections[acc.id];
         if (!vals) continue;
         const display = showInflationAdjusted
-          ? adjustForInflation(vals, localInflation)
+          ? adjustForInflation(vals, projectionUI.inflationRate)
           : vals;
         datasets.push({
           label: `${acc.name} (Was wäre wenn)`,
@@ -376,14 +378,14 @@
             Inflation
             <Tip text="Erwartete jährliche Inflationsrate – nur für die Kaufkraftbereinigung relevant, hat keinen Einfluss auf die Wachstumskurven selbst." />
           </span>
-          <span class="font-medium">{formatPercent(localInflation)}</span>
+          <span class="font-medium">{formatPercent(projectionUI.inflationRate)}</span>
         </div>
         <Slider
           type="single"
           min={0}
-          max={0.05}
+          max={0.1}
           step={0.0025}
-          bind:value={localInflation}
+          bind:value={projectionUI.inflationRate}
         />
       </div>
 
