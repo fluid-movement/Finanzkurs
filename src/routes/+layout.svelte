@@ -3,7 +3,7 @@
   import favicon from "$lib/assets/favicon.svg";
   import { localStorageAvailable } from "$lib/stores/persistence";
   import { TooltipProvider } from "$lib/components/ui/tooltip";
-  import { Compass } from "@lucide/svelte";
+  import { PiggyBank } from "@lucide/svelte";
 
   let { children } = $props();
 </script>
@@ -24,7 +24,7 @@
 
   <header class="flex h-12 shrink-0 items-center border-b border-border px-4">
     <span class="text-sm flex gap-2 items-center font-semibold"
-      ><Compass size="16" />Geldkompass</span
+      ><PiggyBank size="16" />Finanzkurs</span
     >
   </header>
 
