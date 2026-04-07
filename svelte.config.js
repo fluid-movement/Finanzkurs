@@ -1,21 +1,16 @@
-import adapter from '@sveltejs/adapter-static';
-import { relative, sep } from 'node:path';
+import adapter from "@sveltejs/adapter-static";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	compilerOptions: {
-		runes: ({ filename }) => {
-			const relativePath = relative(import.meta.dirname, filename);
-			const pathSegments = relativePath.toLowerCase().split(sep);
-			return pathSegments.includes('node_modules') ? undefined : true;
-		}
-	},
-	kit: {
-		adapter: adapter({ fallback: '404.html' }),
-		prerender: {
-			handleHttpError: 'warn'
-		}
-	}
+  preprocess: vitePreprocess(),
+
+  kit: {
+    adapter: adapter(),
+    prerender: {
+      handleHttpError: "warn",
+    },
+  },
 };
 
 export default config;
