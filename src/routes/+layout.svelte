@@ -1,6 +1,6 @@
 <script lang="ts">
   import "./layout.css";
-  import favicon from "$lib/assets/favicon.svg";
+  import favicon from "$lib/assets/favicon.ico";
   import { localStorageAvailable } from "$lib/stores/persistence";
   import { TooltipProvider } from "$lib/components/ui/tooltip";
   import { PiggyBank } from "@lucide/svelte";
@@ -10,6 +10,7 @@
 
 <svelte:head>
   <link rel="icon" href={favicon} />
+  <title>Finanzkurs - Visualisiere deine Finanzen</title>
 </svelte:head>
 
 <div class="flex min-h-dvh flex-col bg-background text-foreground">
